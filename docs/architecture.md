@@ -2,7 +2,7 @@
 
 CarlNews 是內容優先的靜態時事評論網站：`src/content/news` 的 Markdown／MDX 是唯一資料來源，經 schema 驗證與 Astro build 產生純靜態 HTML，由 Cloudflare Workers Static Assets 提供服務。沒有資料庫、沒有 SSR、沒有常駐後端，執行期不存在應用程式狀態。
 
-本文件定義**邊界**——改動會影響既有時事評論或對外 URL 的檔案。技術選型的理由記在 [`docs/adr/`](adr/)，內容寫作規範記在 [`docs/content-guide.md`](content-guide.md)，領域詞彙記在 [`CONTEXT.md`](../CONTEXT.md)。
+本文件定義**邊界**——改動會影響既有時事評論或對外 URL 的檔案。技術選型的理由記在 [`docs/adr/`](adr/)，視覺規範記在 [`DESIGN.md`](../DESIGN.md)，內容寫作規範記在 [`docs/content-guide.md`](content-guide.md)，領域詞彙記在 [`CONTEXT.md`](../CONTEXT.md)。
 
 ## 建置管線
 

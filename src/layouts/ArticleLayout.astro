@@ -163,7 +163,7 @@ const newsJsonLd = {
       post.data.updateNote && post.data.updatedDate && (
         <aside class="update-banner" aria-label="最新進展補充">
           <div class="update-banner__head">
-            <strong>最新進展補充</strong>
+            <strong>UPDATE NOTE // 最新進展補充</strong>
             <time datetime={post.data.updatedDate.toISOString()}>
               {dateFormatter.format(post.data.updatedDate)}
             </time>
@@ -187,20 +187,37 @@ const newsJsonLd = {
     }
 
     <section class="executive-brief" aria-labelledby="executive-brief-title">
-      <h2 id="executive-brief-title" class="executive-brief__title">
-        三問速覽
-      </h2>
+      <div class="executive-brief__head">
+        <h2 id="executive-brief-title" class="executive-brief__title">
+          DISPATCH BRIEF // 三問速覽
+        </h2>
+        <span class="executive-brief__sub">
+          WHAT HAPPENED · WHY IT MATTERS · WHAT TO WATCH
+        </span>
+      </div>
       <dl class="executive-brief__grid">
         <div class="executive-brief__item">
-          <dt>發生什麼事</dt>
+          <dt>
+            <span class="brief-num">01</span>
+            <span class="brief-en">WHAT HAPPENED</span>
+            <strong>發生什麼事</strong>
+          </dt>
           <dd>{post.data.whatHappened}</dd>
         </div>
         <div class="executive-brief__item">
-          <dt>為什麼重要</dt>
+          <dt>
+            <span class="brief-num">02</span>
+            <span class="brief-en">WHY IT MATTERS</span>
+            <strong>為什麼重要</strong>
+          </dt>
           <dd>{post.data.whyItMatters}</dd>
         </div>
         <div class="executive-brief__item">
-          <dt>後續怎麼看</dt>
+          <dt>
+            <span class="brief-num">03</span>
+            <span class="brief-en">WHAT TO WATCH</span>
+            <strong>後續怎麼看</strong>
+          </dt>
           <dd>{post.data.whatNext}</dd>
         </div>
       </dl>
@@ -215,26 +232,54 @@ const newsJsonLd = {
 
     <footer class="article-footer">
       <section class="article-sources" aria-labelledby="article-sources-title">
-        <h2 id="article-sources-title">消息來源與查核依據</h2>
+        <div class="article-sources__head">
+          <h2 id="article-sources-title">
+            SOURCE PROVENANCE // 消息來源與查核依據
+          </h2>
+          <span>{post.data.sources.length} 筆一手依據</span>
+        </div>
         <ol class="sources-list">
           {
-            post.data.sources.map((source) => (
+            post.data.sources.map((source, idx) => (
               <li class="source-item">
-                <a href={source.url} target="_blank" rel="noopener noreferrer">
-                  {source.title}
-                </a>
-                {(source.publisher || source.publishedAt) && (
-                  <span class="source-meta">
-                    {[
-                      source.publisher,
-                      source.publishedAt
-                        ? dateFormatter.format(source.publishedAt)
-                        : null,
-                    ]
-                      .filter(Boolean)
-                      .join(" · ")}
-                  </span>
-                )}
+                <span class="source-index">
+                  [{String(idx + 1).padStart(2, "0")}]
+                </span>
+                <div class="source-content">
+                  <a
+                    href={source.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <span>{source.title}</span>
+                    <svg
+                      width="13"
+                      height="13"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M7 17 17 7" />
+                      <path d="M7 7h10v10" />
+                    </svg>
+                  </a>
+                  {(source.publisher || source.publishedAt) && (
+                    <div class="source-meta">
+                      {source.publisher && (
+                        <span class="source-publisher">{source.publisher}</span>
+                      )}
+                      {source.publishedAt && (
+                        <time datetime={source.publishedAt.toISOString()}>
+                          {dateFormatter.format(source.publishedAt)}
+                        </time>
+                      )}
+                    </div>
+                  )}
+                </div>
               </li>
             ))
           }
@@ -407,18 +452,19 @@ const newsJsonLd = {
   .category-badge {
     display: inline-flex;
     align-items: center;
-    padding: 0.25rem 0.8rem;
-    border-radius: var(--radius-pill);
-    background: var(--color-accent-soft);
-    color: var(--color-accent);
+    padding: 0.2rem 0.65rem;
+    border-radius: var(--radius-sm);
+    background: var(--color-accent);
+    color: var(--color-accent-ink);
     font-family: var(--font-display);
     font-size: var(--text-xs);
     font-weight: 700;
     text-decoration: none;
+    white-space: nowrap;
   }
 
   .category-badge:hover {
-    background: var(--color-accent);
+    background: var(--color-accent-hover);
     color: var(--color-accent-ink);
   }
 
@@ -427,13 +473,13 @@ const newsJsonLd = {
     max-width: var(--prose-width);
     margin-inline: auto;
     margin-block-end: var(--space-2xl);
-    padding: var(--space-lg) var(--space-xl);
     border: var(--rule-hair) solid var(--color-rule-2);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-md);
     background: var(--color-card);
   }
 
   .update-banner {
+    padding: var(--space-md) var(--space-xl);
     border-inline-start: 4px solid var(--color-secondary);
     background: var(--color-secondary-soft);
     display: grid;
@@ -445,8 +491,10 @@ const newsJsonLd = {
     flex-wrap: wrap;
     justify-content: space-between;
     gap: var(--space-sm);
+    font-family: var(--font-mono);
     font-size: var(--text-xs);
     color: var(--color-secondary);
+    font-variant-numeric: tabular-nums;
   }
 
   .update-banner p {
@@ -456,40 +504,90 @@ const newsJsonLd = {
   }
 
   .executive-brief {
-    display: grid;
-    gap: var(--space-md);
-    border-inline-start: 4px solid var(--color-accent);
+    border-block-start: var(--rule-masthead) solid var(--color-accent);
+    overflow: hidden;
+  }
+
+  .executive-brief__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-xs) var(--space-md);
+    padding: var(--space-sm) var(--space-lg);
+    background: var(--color-paper-2);
+    border-block-end: var(--rule-hair) solid var(--color-rule);
   }
 
   .executive-brief__title {
-    font-size: var(--text-md);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
     font-weight: 700;
+    letter-spacing: 0.06em;
     color: var(--color-ink);
+  }
+
+  .executive-brief__sub {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--color-muted);
+    letter-spacing: 0.06em;
   }
 
   .executive-brief__grid {
     display: grid;
-    gap: var(--space-md);
+    grid-template-columns: minmax(0, 1fr);
     margin: 0;
   }
 
   .executive-brief__item {
     display: grid;
-    gap: 0.25rem;
-    padding-block-start: var(--space-sm);
+    align-content: start;
+    gap: var(--space-xs);
+    padding: var(--space-lg);
     border-block-start: var(--rule-hair) solid var(--color-rule);
   }
 
   .executive-brief__item:first-child {
-    padding-block-start: 0;
     border-block-start: none;
   }
 
   .executive-brief__item dt {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
     font-family: var(--font-display);
-    font-size: var(--text-xs);
-    font-weight: 700;
+    font-size: var(--text-sm);
+    color: var(--color-ink);
+  }
+
+  .brief-num {
+    display: inline-grid;
+    place-items: center;
+    min-width: 1.5rem;
+    padding: 0.1rem 0.35rem;
+    border-radius: var(--radius-sm);
+    background: var(--color-accent-soft);
     color: var(--color-accent);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .brief-en {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--color-muted);
+  }
+
+  .executive-brief__item dt strong {
+    width: 100%;
+    font-size: var(--text-sm);
+    color: var(--color-ink);
   }
 
   .executive-brief__item dd {
@@ -499,41 +597,123 @@ const newsJsonLd = {
     line-height: 1.7;
   }
 
-  .article-sources {
-    display: grid;
-    gap: var(--space-sm);
-    padding: var(--space-lg) var(--space-xl);
-    border: var(--rule-hair) solid var(--color-rule);
-    border-radius: var(--radius-lg);
-    background: var(--color-paper-2);
+  @media (min-width: 52rem) {
+    .executive-brief__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .executive-brief__item {
+      border-block-start: none;
+      border-inline-start: var(--rule-hair) solid var(--color-rule);
+    }
+
+    .executive-brief__item:first-child {
+      border-inline-start: none;
+    }
   }
 
-  .article-sources h2 {
-    font-size: var(--text-md);
+  .article-sources {
+    display: grid;
+    gap: 0;
+    border: var(--rule-hair) solid var(--color-rule-2);
+    border-block-start: var(--rule-strong) solid var(--color-secondary);
+    border-radius: var(--radius-md);
+    background: var(--color-card);
+    overflow: hidden;
+  }
+
+  .article-sources__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-lg);
+    background: var(--color-paper-2);
+    border-block-end: var(--rule-hair) solid var(--color-rule);
+  }
+
+  .article-sources__head h2 {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.06em;
     color: var(--color-ink);
+  }
+
+  .article-sources__head span {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-muted);
+    font-variant-numeric: tabular-nums;
   }
 
   .sources-list {
     display: grid;
-    gap: var(--space-sm);
+    gap: 0;
     margin: 0;
-    padding-inline-start: 1.25rem;
+    padding: 0;
+    list-style: none;
   }
 
   .source-item {
     display: grid;
-    gap: 0.15rem;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--space-md);
+    align-items: start;
+    padding: var(--space-md) var(--space-lg);
+    border-block-start: var(--rule-hair) solid var(--color-rule);
     font-size: var(--text-sm);
   }
 
-  .source-item a {
+  .source-item:first-child {
+    border-block-start: none;
+  }
+
+  .source-index {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    color: var(--color-secondary);
+    font-variant-numeric: tabular-nums;
+    padding-block-start: 0.15rem;
+  }
+
+  .source-content {
+    display: grid;
+    gap: 0.25rem;
+    min-width: 0;
+  }
+
+  .source-content a {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.35rem;
     font-weight: 600;
     word-break: break-word;
   }
 
+  .source-content a svg {
+    flex: none;
+    transform: translateY(0.1em);
+  }
+
   .source-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-xs);
+    font-family: var(--font-mono);
     font-size: var(--text-xs);
     color: var(--color-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .source-publisher {
+    padding: 0.05rem 0.45rem;
+    border-radius: var(--radius-sm);
+    background: var(--color-paper-2);
+    color: var(--color-ink-2);
+    font-weight: 600;
   }
 
   .article-share {
@@ -566,6 +746,7 @@ const newsJsonLd = {
     font-size: var(--text-sm);
     font-weight: 700;
     line-height: 1;
+    white-space: nowrap;
   }
 
   .article-share__actions svg {
@@ -634,9 +815,10 @@ const newsJsonLd = {
   }
 
   .series-section {
-    padding: var(--space-xl);
-    border-radius: var(--radius-lg);
-    border: var(--rule-hair) solid var(--color-rule);
+    padding: var(--space-lg) var(--space-xl);
+    border-radius: var(--radius-md);
+    border: var(--rule-hair) solid var(--color-rule-2);
+    border-inline-start: 4px solid var(--color-ink);
     background: var(--color-paper-2);
     display: grid;
     gap: var(--space-md);

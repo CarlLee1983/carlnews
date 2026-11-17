@@ -28,10 +28,16 @@ const seriesOrderLabel =
 ---
 
 <a class="series-card" href={`/series/${slug}/`}>
-  <div class="series-card__visual">
-    <div class="series-card__badge">{seriesOrderLabel}</div>
-    {
-      cover ? (
+  <div class="series-card__head">
+    <span class="series-card__badge">{seriesOrderLabel}</span>
+    <span class="series-card__counts">
+      {posts.length} 篇 · 約 {totalReadingMinutes} 分鐘
+    </span>
+  </div>
+
+  {
+    cover && (
+      <div class="series-card__visual">
         <Image
           class="series-card__cover"
           src={cover}
@@ -40,34 +46,11 @@ const seriesOrderLabel =
           sizes="(min-width: 54rem) 24rem, 100vw"
           loading="lazy"
         />
-      ) : (
-        <div class="series-card__placeholder" aria-hidden="true">
-          <svg
-            width="44"
-            height="44"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z" />
-            <path d="M6 6h10" />
-            <path d="M6 10h10" />
-          </svg>
-        </div>
-      )
-    }
-  </div>
+      </div>
+    )
+  }
 
   <div class="series-card__body">
-    <div class="series-card__meta">
-      <span class="meta-item">{posts.length} 篇追蹤</span>
-      <span class="meta-dot">·</span>
-      <span class="meta-item">約 {totalReadingMinutes} 分鐘</span>
-    </div>
-
     <h2 class="series-card__title">{name}</h2>
 
     {
@@ -107,13 +90,13 @@ const seriesOrderLabel =
   .series-card {
     display: flex;
     flex-direction: column;
-    border: var(--rule-hair) solid var(--color-rule);
-    border-radius: var(--radius-lg);
+    border: var(--rule-hair) solid var(--color-rule-2);
+    border-block-start: var(--rule-masthead) solid var(--color-ink);
+    border-radius: var(--radius-md);
     background: var(--color-card);
     text-decoration: none;
     color: inherit;
     overflow: hidden;
-    box-shadow: var(--shadow-sm);
     transition: border-color var(--dur-short) var(--ease-out);
   }
 
@@ -121,14 +104,33 @@ const seriesOrderLabel =
     border-color: var(--color-accent);
   }
 
+  .series-card__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-lg);
+    border-block-end: var(--rule-hair) solid var(--color-rule);
+    background: var(--color-paper-2);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .series-card__badge {
+    font-weight: 700;
+    color: var(--color-accent);
+    letter-spacing: 0.04em;
+  }
+
+  .series-card__counts {
+    color: var(--color-muted);
+  }
+
   .series-card__visual {
-    position: relative;
     height: 9rem;
     background: var(--color-paper-2);
     overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
 
   .series-card__cover {
@@ -137,50 +139,18 @@ const seriesOrderLabel =
     object-fit: cover;
   }
 
-  .series-card__placeholder {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    color: var(--color-muted);
-  }
-
-  .series-card__badge {
-    position: absolute;
-    top: var(--space-sm);
-    left: var(--space-sm);
-    z-index: 2;
-    padding: 0.2rem 0.55rem;
-    font-size: 0.7rem;
-    font-family: var(--font-mono);
-    font-weight: 700;
-    border-radius: var(--radius-sm);
-    background: var(--color-card);
-    color: var(--color-accent);
-    border: var(--rule-hair) solid var(--color-rule);
-  }
-
   .series-card__body {
     display: flex;
     flex-direction: column;
     flex: 1;
     padding: var(--space-lg);
-    gap: var(--space-sm);
-  }
-
-  .series-card__meta {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: var(--text-xs);
-    color: var(--color-muted);
+    gap: var(--space-md);
   }
 
   .series-card__title {
     font-size: var(--text-xl);
     font-weight: 700;
-    line-height: 1.35;
+    line-height: 1.32;
     color: var(--color-ink);
   }
 
@@ -192,7 +162,8 @@ const seriesOrderLabel =
     margin-top: auto;
     padding: var(--space-sm) var(--space-md);
     background: var(--color-paper-2);
-    border-radius: var(--radius-md);
+    border-inline-start: 2px solid var(--color-secondary);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
     display: grid;
     gap: 0.2rem;
   }
@@ -204,12 +175,13 @@ const seriesOrderLabel =
     font-size: 0.7rem;
     font-family: var(--font-mono);
     font-weight: 700;
-    color: var(--color-accent);
+    color: var(--color-secondary);
+    font-variant-numeric: tabular-nums;
   }
 
   .latest-title {
     font-size: var(--text-sm);
-    color: var(--color-muted);
+    color: var(--color-ink-2);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -220,6 +192,7 @@ const seriesOrderLabel =
     align-items: center;
     justify-content: space-between;
     padding-top: var(--space-xs);
+    border-block-start: var(--rule-hair) solid var(--color-rule);
     font-size: var(--text-sm);
     font-family: var(--font-display);
     font-weight: 700;

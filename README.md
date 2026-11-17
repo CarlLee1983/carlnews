@@ -15,13 +15,14 @@
 
 ## 文件
 
-| 文件                                             | 內容                     |
-| ------------------------------------------------ | ------------------------ |
-| [`CONTEXT.md`](CONTEXT.md)                       | 領域詞彙定義             |
-| [`docs/architecture.md`](docs/architecture.md)   | 建置管線與邊界清單       |
-| [`docs/content-guide.md`](docs/content-guide.md) | 時事評論寫作與發布規範   |
-| [`docs/testing.md`](docs/testing.md)             | 三道 gate 與測試對應規則 |
-| [`docs/adr/`](docs/adr/)                         | 架構決策記錄             |
+| 文件                                             | 內容                                      |
+| ------------------------------------------------ | ----------------------------------------- |
+| [`CONTEXT.md`](CONTEXT.md)                       | 領域詞彙定義                              |
+| [`docs/architecture.md`](docs/architecture.md)   | 建置管線與邊界清單                        |
+| [`docs/content-guide.md`](docs/content-guide.md) | 時事評論寫作與發布規範                    |
+| [`docs/testing.md`](docs/testing.md)             | 三道 gate 與測試對應規則                  |
+| [`docs/adr/`](docs/adr/)                         | 架構決策記錄                              |
+| [`DESIGN.md`](DESIGN.md)                         | 設計系統與 Modern Financial Dispatch 規範 |
 
 ## 指令
 
