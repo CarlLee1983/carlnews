@@ -1,0 +1,16 @@
+---
+import NewsArchive from "../../components/NewsArchive.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getVisiblePosts } from "../../utils/collections";
+import { paginate } from "../../utils/pagination";
+
+const posts = await getVisiblePosts();
+const pagination = paginate(posts, 1);
+---
+
+<BaseLayout
+  title="全部時事評論"
+  description="CarlNews 的科技業、AI、半導體、產品、政策與國際生活時事評論索引。"
+>
+  <NewsArchive pagination={pagination} totalPosts={posts.length} />
+</BaseLayout>

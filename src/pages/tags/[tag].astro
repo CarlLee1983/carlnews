@@ -1,0 +1,40 @@
+---
+import type { GetStaticPaths } from "astro";
+import ArticleCard from "../../components/ArticleCard.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { collectTaxonomy, getVisiblePosts } from "../../utils/collections";
+
+export const getStaticPaths = (async () => {
+  const taxonomies = collectTaxonomy(await getVisiblePosts(), "tags");
+  return taxonomies.map((tag) => ({
+    params: { tag: tag.slug },
+    props: { tag },
+  }));
+}) satisfies GetStaticPaths;
+
+const { tag } = Astro.props;
+---
+
+<BaseLayout
+  title={`標籤：${tag.name}`}
+  description={`CarlNews 中標記為「${tag.name}」的時事評論。`}
+>
+  <div class="page shell">
+    <div class="tag-nav">
+      <a class="text-link" href="/tags/">← 返回所有標籤</a>
+    </div>
+    <header class="page-header">
+      <h1>{tag.name}</h1>
+      <p>{tag.posts.length} 篇時事評論</p>
+    </header>
+    <div class="article-list">
+      {tag.posts.map((post) => <ArticleCard post={post} variant="row" />)}
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .tag-nav {
+    margin-block-end: var(--space-md);
+  }
+</style>

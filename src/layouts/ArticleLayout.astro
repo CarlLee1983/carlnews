@@ -1,0 +1,671 @@
+---
+import { Image } from "astro:assets";
+import { render, type CollectionEntry } from "astro:content";
+import FontSizeControl from "../components/FontSizeControl.astro";
+import Giscus from "../components/Giscus.astro";
+import TableOfContents from "../components/TableOfContents.astro";
+import { siteConfig } from "../config/site";
+import { categoryHref, getSeriesPosts, postHref } from "../utils/collections";
+import { estimateReadingMinutes, normalizeTaxonomy } from "../utils/content";
+import { buildShareUrls } from "../utils/share";
+import BaseLayout from "./BaseLayout.astro";
+
+interface Props {
+  post: CollectionEntry<"news">;
+  posts: CollectionEntry<"news">[];
+}
+
+const { post, posts } = Astro.props;
+const { Content, headings } = await render(post);
+const body = "body" in post && typeof post.body === "string" ? post.body : "";
+const dateFormatter = new Intl.DateTimeFormat("zh-TW", {
+  dateStyle: "long",
+  timeZone: "Asia/Taipei",
+});
+const index = posts.findIndex((item) => item.id === post.id);
+const newer = index > 0 ? posts[index - 1] : undefined;
+const older = index >= 0 ? posts[index + 1] : undefined;
+const seriesPosts = post.data.series
+  ? getSeriesPosts(posts, post.data.series)
+  : [];
+const canonical = post.data.canonicalUrl;
+const pageUrl = new URL(postHref(post), Astro.site);
+const shareUrls = buildShareUrls({
+  title: post.data.title,
+  pageUrl: pageUrl.href,
+  canonicalUrl: canonical,
+});
+const personId = new URL("/about/#person", Astro.site).href;
+const newsJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "NewsArticle",
+  headline: post.data.title,
+  description: post.data.description,
+  articleSection: post.data.category,
+  datePublished: post.data.publishDate.toISOString(),
+  dateModified: (post.data.updatedDate ?? post.data.publishDate).toISOString(),
+  inLanguage: siteConfig.language,
+  mainEntityOfPage: canonical ?? pageUrl.href,
+  author: { "@id": personId },
+  publisher: { "@id": personId },
+  image: post.data.cover
+    ? new URL(post.data.cover.src, Astro.site).href
+    : new URL(siteConfig.defaultSocialImage, Astro.site).href,
+  keywords: [post.data.category, ...post.data.tags].join(", "),
+};
+---
+
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  image={post.data.cover?.src}
+  imageAlt={post.data.coverAlt}
+  canonicalUrl={canonical}
+  type="article"
+  publishDate={post.data.publishDate}
+  updatedDate={post.data.updatedDate}
+  category={post.data.category}
+  tags={post.data.tags}
+  jsonLd={newsJsonLd}
+>
+  <div class="reading-progress" aria-hidden="true"></div>
+  <article class="page shell">
+    <header class="article-header">
+      <div class="article-header__badges">
+        <a class="category-badge" href={categoryHref(post.data.category)}>
+          {post.data.category}
+        </a>
+        {
+          post.data.draft && (
+            <span class="eyebrow">草稿預覽，不會出現在 production build</span>
+          )
+        }
+      </div>
+
+      <h1 data-pagefind-meta="title">{post.data.title}</h1>
+      <p class="article-header__description">{post.data.description}</p>
+
+      <div class="article-meta">
+        <div class="meta-item">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          <time datetime={post.data.publishDate.toISOString()}>
+            發布於 {dateFormatter.format(post.data.publishDate)}
+          </time>
+        </div>
+        {
+          post.data.updatedDate && (
+            <>
+              <span class="meta-dot">·</span>
+              <time datetime={post.data.updatedDate.toISOString()}>
+                更新於 {dateFormatter.format(post.data.updatedDate)}
+              </time>
+            </>
+          )
+        }
+        <span class="meta-dot">·</span>
+        <div class="meta-item">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          <span>{estimateReadingMinutes(body)} 分鐘閱讀</span>
+        </div>
+      </div>
+
+      <div class="article-toolbar">
+        <ul class="tag-list" aria-label="時事標籤">
+          {
+            post.data.tags.map((tag) => (
+              <li>
+                <a
+                  class="tag"
+                  href={`/tags/${encodeURIComponent(normalizeTaxonomy(tag))}/`}
+                >
+                  {tag}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+
+        <div class="article-tools">
+          <FontSizeControl />
+        </div>
+      </div>
+    </header>
+
+    {
+      post.data.updateNote && post.data.updatedDate && (
+        <aside class="update-banner" aria-label="最新進展補充">
+          <div class="update-banner__head">
+            <strong>最新進展補充</strong>
+            <time datetime={post.data.updatedDate.toISOString()}>
+              {dateFormatter.format(post.data.updatedDate)}
+            </time>
+          </div>
+          <p>{post.data.updateNote}</p>
+        </aside>
+      )
+    }
+
+    {
+      post.data.cover && (
+        <Image
+          class="article-cover"
+          src={post.data.cover}
+          alt={post.data.coverAlt ?? ""}
+          widths={[640, 960, 1280]}
+          sizes="(min-width: 1200px) 1120px, calc(100vw - 2rem)"
+          loading="eager"
+        />
+      )
+    }
+
+    <section class="executive-brief" aria-labelledby="executive-brief-title">
+      <h2 id="executive-brief-title" class="executive-brief__title">
+        三問速覽
+      </h2>
+      <dl class="executive-brief__grid">
+        <div class="executive-brief__item">
+          <dt>發生什麼事</dt>
+          <dd>{post.data.whatHappened}</dd>
+        </div>
+        <div class="executive-brief__item">
+          <dt>為什麼重要</dt>
+          <dd>{post.data.whyItMatters}</dd>
+        </div>
+        <div class="executive-brief__item">
+          <dt>後續怎麼看</dt>
+          <dd>{post.data.whatNext}</dd>
+        </div>
+      </dl>
+    </section>
+
+    <div class="article-body">
+      <TableOfContents headings={headings} />
+      <div class="prose">
+        <Content />
+      </div>
+    </div>
+
+    <footer class="article-footer">
+      <section class="article-sources" aria-labelledby="article-sources-title">
+        <h2 id="article-sources-title">消息來源與查核依據</h2>
+        <ol class="sources-list">
+          {
+            post.data.sources.map((source) => (
+              <li class="source-item">
+                <a href={source.url} target="_blank" rel="noopener noreferrer">
+                  {source.title}
+                </a>
+                {(source.publisher || source.publishedAt) && (
+                  <span class="source-meta">
+                    {[
+                      source.publisher,
+                      source.publishedAt
+                        ? dateFormatter.format(source.publishedAt)
+                        : null,
+                    ]
+                      .filter(Boolean)
+                      .join(" · ")}
+                  </span>
+                )}
+              </li>
+            ))
+          }
+        </ol>
+      </section>
+
+      <section class="article-share" aria-labelledby="article-share-title">
+        <h2 id="article-share-title">分享這篇時事評論</h2>
+        <div class="article-share__actions">
+          <a
+            href={shareUrls.x}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="分享到 X"
+          >
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path
+                d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.211l-5.13-6.817-5.967 6.817H1.803l7.73-8.835L1.254 2.25H8.08l4.638 6.176L18.244 2.25Zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77Z"
+              ></path>
+            </svg>
+            <span>X</span>
+          </a>
+          <a
+            href={shareUrls.linkedIn}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="分享到 LinkedIn"
+          >
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path
+                d="M20.452 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.851-3.037-1.853 0-2.136 1.446-2.136 2.939v5.667H9.357V9h3.413v1.561h.048c.476-.9 1.637-1.849 3.37-1.849 3.601 0 4.267 2.37 4.267 5.455v6.285ZM5.337 7.433a2.062 2.062 0 1 1 0-4.125 2.062 2.062 0 0 1 0 4.125ZM7.114 20.452H3.555V9h3.559v11.452Z"
+              ></path>
+            </svg>
+            <span>LinkedIn</span>
+          </a>
+          <a
+            href={shareUrls.facebook}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="分享到 Facebook"
+          >
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path
+                d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.095 10.125 24v-8.437H7.078v-3.49h3.047V9.413c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.235 2.686.235v2.97h-1.513c-1.49 0-1.956.931-1.956 1.886v2.266h3.328l-.532 3.49h-2.796V24C19.612 23.095 24 18.1 24 12.073Z"
+              ></path>
+            </svg>
+            <span>Facebook</span>
+          </a>
+          <button
+            type="button"
+            data-share-copy
+            data-share-url={shareUrls.shareUrl}
+            aria-label="複製文章連結"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+              ></path>
+            </svg>
+            <span>複製連結</span>
+          </button>
+        </div>
+        <p class="article-share__status" data-share-status aria-live="polite">
+        </p>
+      </section>
+
+      {
+        post.data.series && seriesPosts.length > 0 && (
+          <section class="series-section" aria-labelledby="series-posts">
+            <h2 id="series-posts">事件脈絡追蹤：{post.data.series}</h2>
+            <ol class="series-list">
+              {seriesPosts.map((item) => (
+                <li>
+                  <a
+                    href={postHref(item)}
+                    aria-current={item.id === post.id ? "page" : undefined}
+                  >
+                    {item.data.title}
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </section>
+        )
+      }
+      {
+        (older || newer) && (
+          <nav class="post-nav" aria-label="上一篇與下一篇">
+            {older ? (
+              <a href={postHref(older)}>
+                <span>上一篇（較舊）</span>
+                <strong>{older.data.title}</strong>
+              </a>
+            ) : (
+              <span />
+            )}
+            {newer && (
+              <a href={postHref(newer)}>
+                <span>下一篇（較新）</span>
+                <strong>{newer.data.title}</strong>
+              </a>
+            )}
+          </nav>
+        )
+      }
+      <Giscus />
+    </footer>
+  </article>
+</BaseLayout>
+
+<script>
+  import { copyShareUrl } from "../utils/share";
+
+  const progressBar = document.querySelector<HTMLElement>(".reading-progress");
+  const prose = document.querySelector<HTMLElement>(".article-body .prose");
+  if (progressBar && prose) {
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const rect = prose.getBoundingClientRect();
+      const start = rect.top + window.scrollY - window.innerHeight * 0.5;
+      const length = Math.max(rect.height, 1);
+      const ratio = (window.scrollY - start) / length;
+      progressBar.style.setProperty(
+        "--reading-progress",
+        String(Math.min(1, Math.max(0, ratio))),
+      );
+    };
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    update();
+  }
+
+  const copyButton =
+    document.querySelector<HTMLButtonElement>("[data-share-copy]");
+  const shareStatus = document.querySelector<HTMLElement>(
+    "[data-share-status]",
+  );
+
+  copyButton?.addEventListener("click", async () => {
+    const message = await copyShareUrl(
+      navigator.clipboard,
+      copyButton.dataset.shareUrl ?? "",
+    );
+    if (shareStatus) shareStatus.textContent = message;
+  });
+</script>
+
+<style>
+  .article-header__badges {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+
+  .category-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.8rem;
+    border-radius: var(--radius-pill);
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+    font-family: var(--font-display);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .category-badge:hover {
+    background: var(--color-accent);
+    color: var(--color-accent-ink);
+  }
+
+  .update-banner,
+  .executive-brief {
+    max-width: var(--prose-width);
+    margin-inline: auto;
+    margin-block-end: var(--space-2xl);
+    padding: var(--space-lg) var(--space-xl);
+    border: var(--rule-hair) solid var(--color-rule-2);
+    border-radius: var(--radius-lg);
+    background: var(--color-card);
+  }
+
+  .update-banner {
+    border-inline-start: 4px solid var(--color-secondary);
+    background: var(--color-secondary-soft);
+    display: grid;
+    gap: var(--space-xs);
+  }
+
+  .update-banner__head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    font-size: var(--text-xs);
+    color: var(--color-secondary);
+  }
+
+  .update-banner p {
+    color: var(--color-ink);
+    font-size: var(--text-sm);
+    line-height: 1.65;
+  }
+
+  .executive-brief {
+    display: grid;
+    gap: var(--space-md);
+    border-inline-start: 4px solid var(--color-accent);
+  }
+
+  .executive-brief__title {
+    font-size: var(--text-md);
+    font-weight: 700;
+    color: var(--color-ink);
+  }
+
+  .executive-brief__grid {
+    display: grid;
+    gap: var(--space-md);
+    margin: 0;
+  }
+
+  .executive-brief__item {
+    display: grid;
+    gap: 0.25rem;
+    padding-block-start: var(--space-sm);
+    border-block-start: var(--rule-hair) solid var(--color-rule);
+  }
+
+  .executive-brief__item:first-child {
+    padding-block-start: 0;
+    border-block-start: none;
+  }
+
+  .executive-brief__item dt {
+    font-family: var(--font-display);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    color: var(--color-accent);
+  }
+
+  .executive-brief__item dd {
+    margin: 0;
+    color: var(--color-ink-2);
+    font-size: var(--text-sm);
+    line-height: 1.7;
+  }
+
+  .article-sources {
+    display: grid;
+    gap: var(--space-sm);
+    padding: var(--space-lg) var(--space-xl);
+    border: var(--rule-hair) solid var(--color-rule);
+    border-radius: var(--radius-lg);
+    background: var(--color-paper-2);
+  }
+
+  .article-sources h2 {
+    font-size: var(--text-md);
+    color: var(--color-ink);
+  }
+
+  .sources-list {
+    display: grid;
+    gap: var(--space-sm);
+    margin: 0;
+    padding-inline-start: 1.25rem;
+  }
+
+  .source-item {
+    display: grid;
+    gap: 0.15rem;
+    font-size: var(--text-sm);
+  }
+
+  .source-item a {
+    font-weight: 600;
+    word-break: break-word;
+  }
+
+  .source-meta {
+    font-size: var(--text-xs);
+    color: var(--color-muted);
+  }
+
+  .article-share {
+    display: grid;
+    gap: var(--space-sm);
+  }
+
+  .article-share h2 {
+    color: var(--color-ink);
+    font-size: var(--text-md);
+  }
+
+  .article-share__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+  }
+
+  .article-share__actions a,
+  .article-share__actions button {
+    display: inline-flex;
+    min-height: 2.5rem;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.7rem;
+    border: var(--rule-hair) solid var(--color-rule-2);
+    border-radius: var(--radius-sm);
+    background: var(--color-card);
+    color: var(--color-ink-2);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .article-share__actions svg {
+    width: 1.1rem;
+    height: 1.1rem;
+    flex: 0 0 auto;
+  }
+
+  .article-share__actions a:hover,
+  .article-share__actions button:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  .article-share__status {
+    min-height: 1.5em;
+    margin: 0;
+    color: var(--color-muted);
+    font-size: var(--text-xs);
+  }
+
+  .article-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-xl);
+  }
+
+  .article-body .prose {
+    min-width: 0;
+    width: 100%;
+  }
+
+  @media (min-width: 72rem) {
+    .article-body {
+      grid-template-columns: minmax(0, 1fr) 15rem;
+      align-items: start;
+      column-gap: var(--space-2xl);
+    }
+
+    .article-body :global(.toc) {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    .article-body .prose {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    .article-header,
+    .update-banner,
+    .executive-brief,
+    .article-footer {
+      margin-inline: max(
+          0px,
+          calc(
+            (
+                100% - 15rem - var(--space-2xl) - var(--prose-width) *
+                  (1 + (var(--font-scale, 1) - 1) * 0.4)
+              ) /
+              2
+          )
+        )
+        auto;
+    }
+  }
+
+  .series-section {
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+    border: var(--rule-hair) solid var(--color-rule);
+    background: var(--color-paper-2);
+    display: grid;
+    gap: var(--space-md);
+  }
+
+  .series-section h2 {
+    font-size: var(--text-md);
+    font-weight: 700;
+  }
+
+  .series-list {
+    display: grid;
+    gap: var(--space-xs);
+    padding-inline-start: 1.25rem;
+    margin: 0;
+  }
+
+  .series-list a {
+    color: var(--color-ink-2);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .series-list a[aria-current="page"] {
+    color: var(--color-accent);
+    font-weight: 700;
+  }
+
+  .series-list a:hover {
+    color: var(--color-accent);
+  }
+</style>

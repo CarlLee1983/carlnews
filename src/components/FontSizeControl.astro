@@ -1,0 +1,177 @@
+---
+// src/components/FontSizeControl.astro
+---
+
+<div class="font-size-control" aria-label="字級調整">
+  <div class="font-size-indicator">
+    <svg
+      width="15"
+      height="15"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <polyline points="4 7 4 4 20 4 20 7"></polyline>
+      <line x1="9" y1="20" x2="15" y2="20"></line>
+      <line x1="12" y1="4" x2="12" y2="20"></line>
+    </svg>
+    <span class="control-label">字級</span>
+  </div>
+  <fieldset class="font-size-group" aria-label="選擇閱讀字體大小">
+    <input
+      class="font-size-input"
+      id="font-size-sm"
+      type="radio"
+      name="font-size"
+      value="sm"
+      title="緊湊字級 (16px)"
+    />
+    <label class="font-size-btn" for="font-size-sm">小</label>
+    <input
+      class="font-size-input"
+      id="font-size-md"
+      type="radio"
+      name="font-size"
+      value="md"
+      checked
+      title="標準閱讀字級 (18px)"
+    />
+    <label class="font-size-btn" for="font-size-md">標準</label>
+    <input
+      class="font-size-input"
+      id="font-size-lg"
+      type="radio"
+      name="font-size"
+      value="lg"
+      title="放大字級 (21px)"
+    />
+    <label class="font-size-btn" for="font-size-lg">大</label>
+    <input
+      class="font-size-input"
+      id="font-size-xl"
+      type="radio"
+      name="font-size"
+      value="xl"
+      title="特大字級 (24px)"
+    />
+    <label class="font-size-btn" for="font-size-xl">特大</label>
+  </fieldset>
+</div>
+
+<script>
+  function initFontSizeControl() {
+    const group = document.querySelector(".font-size-group");
+    if (!group) return;
+
+    const inputs = group.querySelectorAll<HTMLInputElement>(".font-size-input");
+    let savedScale: string | null = null;
+    try {
+      savedScale = localStorage.getItem("carlnews-font-scale");
+    } catch {}
+    const currentScale =
+      document.documentElement.dataset.fontScale || savedScale || "md";
+
+    function setActive(scale: string) {
+      document.documentElement.dataset.fontScale = scale;
+      try {
+        localStorage.setItem("carlnews-font-scale", scale);
+      } catch {}
+
+      inputs.forEach((input) => {
+        input.checked = input.value === scale;
+      });
+    }
+
+    setActive(currentScale);
+
+    inputs.forEach((input) => {
+      input.addEventListener("change", () => {
+        if (input.checked) {
+          setActive(input.value);
+        }
+      });
+    });
+  }
+
+  initFontSizeControl();
+  document.addEventListener("astro:page-load", initFontSizeControl);
+</script>
+
+<style>
+  .font-size-control {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: 0.25rem 0.35rem 0.25rem 0.75rem;
+    border-radius: var(--radius-pill);
+    background: var(--color-paper-2);
+    border: var(--rule-hair) solid var(--color-rule);
+    font-size: var(--text-xs);
+    width: fit-content;
+  }
+
+  .font-size-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--color-muted);
+    font-weight: 600;
+    margin-inline-end: 0.25rem;
+    user-select: none;
+  }
+
+  .font-size-group {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .font-size-input {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .font-size-btn {
+    display: grid;
+    min-width: 2.5rem;
+    min-height: 2.5rem;
+    place-items: center;
+    border-radius: var(--radius-pill);
+    color: var(--color-muted);
+    font-family: var(--font-display);
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    line-height: 1.2;
+  }
+
+  .font-size-btn:hover {
+    color: var(--color-ink);
+    background: var(--color-card);
+  }
+
+  .font-size-input:checked + .font-size-btn {
+    background: var(--color-card);
+    color: var(--color-accent);
+    font-weight: 700;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .font-size-input:focus-visible + .font-size-btn {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 3px;
+  }
+</style>

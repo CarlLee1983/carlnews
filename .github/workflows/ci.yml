@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          fetch-depth: 0
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0 (Node.js 24)
+        with:
+          version: 12.0.0
+          run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: 22.17.1
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Restore Astro and Prettier caches
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            node_modules/.astro
+            node_modules/.cache/prettier
+          key: build-cache-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.sha }}
+          restore-keys: |
+            build-cache-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-
+
+      - name: Validate changed article policy
+        run: pnpm content:policy -- ${{ github.event.pull_request.base.sha }}
+
+      - name: Check types, formatting, content, and production build
+        run: pnpm check
+
+      - name: Run tests
+        run: pnpm test
+
+      - name: Validate Cloudflare deployment
+        run: pnpm exec wrangler deploy --dry-run

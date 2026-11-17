@@ -1,0 +1,190 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { collectTaxonomy, getVisiblePosts } from "../../utils/collections";
+import { sortByPostCount } from "../../utils/content";
+
+const topics = sortByPostCount(
+  collectTaxonomy(await getVisiblePosts(), "tags"),
+).slice(0, 6);
+---
+
+<BaseLayout
+  title="全文搜尋"
+  description="搜尋 CarlNews 已發布時事評論與三問判讀內容。"
+  noindex
+>
+  <div class="page shell search-shell">
+    <header class="page-header">
+      <h1>全文搜尋</h1>
+      <p>輸入公司、產品、政策名詞或時事關鍵字，搜尋站內所有判讀內容。</p>
+    </header>
+    <form class="search-form" role="search" data-search-form>
+      <label for="pagefind-query">關鍵字</label>
+      <input
+        id="pagefind-query"
+        name="q"
+        type="search"
+        placeholder="例如：TSMC、推論成本、出口管制"
+        autocomplete="off"
+        required
+      />
+      <button class="button" type="submit">搜尋</button>
+    </form>
+    {
+      topics.length > 0 && (
+        <nav class="search-topics" aria-label="依熱門標籤瀏覽">
+          <span class="muted">也可以從標籤開始</span>
+          <ul class="tag-list">
+            {topics.map((topic) => (
+              <li>
+                <a class="tag" href={`/tags/${topic.slug}/`}>
+                  {topic.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )
+    }
+    <p class="muted" role="status" aria-live="polite" data-search-status>
+      輸入關鍵字開始搜尋。
+    </p>
+    <div class="search-results" data-search-results></div>
+  </div>
+</BaseLayout>
+
+<script>
+  interface PagefindData {
+    url: string;
+    excerpt: string;
+    meta: Record<string, string>;
+  }
+
+  interface PagefindResult {
+    data(): Promise<PagefindData>;
+  }
+
+  interface PagefindModule {
+    search(query: string): Promise<{ results: PagefindResult[] }>;
+  }
+
+  const form = document.querySelector<HTMLFormElement>("[data-search-form]");
+  const input = document.querySelector<HTMLInputElement>("#pagefind-query");
+  const status = document.querySelector<HTMLElement>("[data-search-status]");
+  const container = document.querySelector<HTMLElement>(
+    "[data-search-results]",
+  );
+
+  function appendText(
+    parent: HTMLElement,
+    tag: "p",
+    text: string,
+    className?: string,
+  ) {
+    const element = document.createElement(tag);
+    element.textContent = text;
+    if (className) element.className = className;
+    parent.append(element);
+    return element;
+  }
+
+  async function runSearch(query: string) {
+    if (!status || !container) return;
+    container.replaceChildren();
+    if (!query.trim()) {
+      status.textContent = "請輸入關鍵字。";
+      return;
+    }
+    status.textContent = "正在搜尋…";
+    try {
+      const pagefindUrl = "/pagefind/pagefind.js";
+      const pagefind = (await import(
+        /* @vite-ignore */ pagefindUrl
+      )) as PagefindModule;
+      const search = await pagefind.search(query);
+      const results = await Promise.all(
+        search.results.slice(0, 30).map((result) => result.data()),
+      );
+      status.textContent =
+        results.length > 0
+          ? `找到 ${search.results.length} 筆結果${search.results.length > results.length ? `，顯示前 ${results.length} 筆；加入更多關鍵字可縮小範圍` : ""}。`
+          : `找不到包含「${query}」的內容。請縮短關鍵字或改用相關關鍵字。`;
+      for (const result of results) {
+        const article = document.createElement("article");
+        article.className = "search-result";
+        const heading = document.createElement("h2");
+        const link = document.createElement("a");
+        link.href = result.url;
+        link.textContent = result.meta.title || result.url;
+        heading.append(link);
+        article.append(heading);
+        appendText(article, "p", result.excerpt.replace(/<[^>]+>/g, ""));
+        const metadata = [
+          result.meta.category,
+          result.meta.dateLabel,
+          result.meta.tags,
+        ]
+          .filter(Boolean)
+          .join(" · ");
+        if (metadata) appendText(article, "p", metadata, "article-card__meta");
+        container.append(article);
+      }
+    } catch {
+      status.textContent = import.meta.env.DEV
+        ? "搜尋索引尚未產生。請先執行 pnpm build，再用 pnpm preview 檢視搜尋。"
+        : "暫時無法載入搜尋結果，請稍後再試，或從版面導覽瀏覽。";
+    }
+  }
+
+  if (form && input) {
+    const initial = new URLSearchParams(location.search).get("q") || "";
+    input.value = initial;
+    if (initial) runSearch(initial);
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const query = input.value.trim();
+      history.replaceState(
+        null,
+        "",
+        query ? `?q=${encodeURIComponent(query)}` : location.pathname,
+      );
+      runSearch(query);
+    });
+
+    window.addEventListener("keydown", (event) => {
+      if (
+        (event.key === "/" ||
+          ((event.metaKey || event.ctrlKey) && event.key === "k")) &&
+        document.activeElement !== input &&
+        !(document.activeElement instanceof HTMLInputElement) &&
+        !(document.activeElement instanceof HTMLTextAreaElement)
+      ) {
+        event.preventDefault();
+        input.focus();
+        input.select();
+      }
+    });
+  }
+</script>
+
+<style>
+  .search-shell {
+    align-content: start;
+  }
+
+  .search-shell .page-header {
+    margin-block-end: var(--space-sm);
+  }
+
+  .search-topics {
+    display: grid;
+    gap: var(--space-sm);
+    padding-block-end: var(--space-lg);
+    border-block-end: var(--rule-hair) solid var(--color-rule);
+    font-size: var(--text-sm);
+  }
+
+  .search-topics .tag {
+    min-height: 2.5rem;
+  }
+</style>

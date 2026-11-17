@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">CarlNews</title>
+  <desc id="desc">李卡爾的科技、產業與國際時事判讀</desc>
+  <rect width="1200" height="630" fill="#fafafb"/>
+  <rect width="20" height="630" fill="#1d4ed8"/>
+  <line x1="80" y1="96" x2="1120" y2="96" stroke="#d5dbe3" stroke-width="2"/>
+  <line x1="80" y1="534" x2="1120" y2="534" stroke="#d5dbe3" stroke-width="2"/>
+  <text x="80" y="170" fill="#1d4ed8" font-family="ui-monospace, monospace" font-size="26" font-weight="700">CARLNEWS · TECH × AI × GLOBAL BRIEFINGS</text>
+  <text x="80" y="318" fill="#111418" font-family="system-ui, sans-serif" font-size="108" font-weight="800" letter-spacing="-3">CarlNews</text>
+  <text x="84" y="400" fill="#2c313a" font-family="system-ui, sans-serif" font-size="38">發生什麼事 · 為什麼重要 · 後續怎麼看</text>
+  <text x="80" y="582" fill="#545b66" font-family="ui-monospace, monospace" font-size="24">CarlLee1983 · 科技業 · 半導體 · AI · 政策 · 國際時事</text>
+</svg>

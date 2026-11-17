@@ -1,0 +1,60 @@
+---
+import type { GetStaticPaths } from "astro";
+import ArticleCard from "../../components/ArticleCard.astro";
+import EmptyState from "../../components/EmptyState.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { collectCategories, getVisiblePosts } from "../../utils/collections";
+
+export const getStaticPaths = (async () => {
+  const categories = collectCategories(await getVisiblePosts());
+  return categories.map((category) => ({
+    params: { category: category.slug },
+    props: { category },
+  }));
+}) satisfies GetStaticPaths;
+
+const { category } = Astro.props;
+---
+
+<BaseLayout
+  title={`版面：${category.name}`}
+  description={`CarlNews「${category.name}」版面收錄的時事評論與判讀。`}
+>
+  <div class="page shell">
+    <div class="category-nav">
+      <a class="text-link" href="/category/">← 返回所有版面</a>
+    </div>
+
+    <header class="page-header">
+      <div class="eyebrow">
+        <span class="eyebrow-dot" aria-hidden="true"></span>
+        <span>Desk · {category.posts.length} 篇</span>
+      </div>
+      <h1>{category.name}</h1>
+      <p>收錄歸類於「{category.name}」版面的時事判讀與追蹤。</p>
+    </header>
+
+    {
+      category.posts.length > 0 ? (
+        <div class="article-list">
+          {category.posts.map((post) => (
+            <ArticleCard post={post} variant="row" />
+          ))}
+        </div>
+      ) : (
+        <EmptyState
+          title={`「${category.name}」版面尚無已發布評論`}
+          description="目前還沒有歸類至此版面的正式時事評論，歡迎先瀏覽其他版面或全部時事列表。"
+          href="/news/"
+          action="前往全部時事"
+        />
+      )
+    }
+  </div>
+</BaseLayout>
+
+<style>
+  .category-nav {
+    margin-block-end: var(--space-md);
+  }
+</style>

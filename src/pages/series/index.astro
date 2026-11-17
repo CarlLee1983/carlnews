@@ -1,0 +1,62 @@
+---
+import EmptyState from "../../components/EmptyState.astro";
+import SeriesCard from "../../components/SeriesCard.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { collectTaxonomy, getVisiblePosts } from "../../utils/collections";
+
+const series = collectTaxonomy(await getVisiblePosts(), "series");
+---
+
+<BaseLayout
+  title="事件脈絡"
+  description="CarlNews 依 seriesOrder 串聯的重大產業、政策與國際時事追蹤脈絡。"
+>
+  <div class="page shell">
+    <header class="page-header">
+      <div class="eyebrow">
+        <span class="eyebrow-dot" aria-hidden="true"></span>
+        <span>TRACKED STORYLINES</span>
+      </div>
+      <h1>事件脈絡</h1>
+      <p>
+        串聯跨日、跨階段演進的重大事件，從最初引爆點到後續轉折完整保留前後文。
+      </p>
+    </header>
+    {
+      series.length > 0 ? (
+        <div class="series-grid">
+          {series.map((item, index) => (
+            <SeriesCard
+              name={item.name}
+              slug={item.slug}
+              posts={item.posts}
+              index={index}
+            />
+          ))}
+        </div>
+      ) : (
+        <EmptyState
+          title="尚無事件脈絡專題"
+          description="當多篇時事評論設定相同的 series 與遞增 seriesOrder 後，追蹤入口會自動建立在這裡。"
+          href="/news/"
+          action="瀏覽全部時事"
+        />
+      )
+    }
+  </div>
+</BaseLayout>
+
+<style>
+  .series-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(21rem, 1fr));
+    gap: var(--space-xl);
+  }
+
+  @media (max-width: 48rem) {
+    .series-grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-lg);
+    }
+  }
+</style>

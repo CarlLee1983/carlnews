@@ -1,0 +1,199 @@
+:root {
+  /* Phase A Baseline Tokens — Light Mode */
+  --color-paper: #fafafb;
+  --color-paper-2: #f1f3f5;
+  --color-paper-3: #e5e8ec;
+  --color-card: #ffffff;
+  --color-card-hover: #ffffff;
+
+  --color-ink: #111418;
+  --color-ink-2: #2c313a;
+  --color-muted: #545b66;
+  --color-faint: #848d9a;
+
+  --color-rule: rgba(17, 20, 24, 0.09);
+  --color-rule-2: rgba(17, 20, 24, 0.16);
+
+  --color-accent: #1d4ed8;
+  --color-accent-soft: #eff4ff;
+  --color-accent-ink: #ffffff;
+  --color-accent-hover: #1e40af;
+
+  --color-secondary: #156f54;
+  --color-secondary-soft: #ecf7f3;
+
+  --color-tag-bg: #eef1f5;
+  --color-tag-text: #343b46;
+
+  --color-focus: #1d4ed8;
+  --color-error: #b91c1c;
+  --color-success: #15803d;
+
+  --color-code: #161920;
+  --color-code-ink: #f1f3f5;
+  --color-code-inline-bg: #eef1f5;
+  --color-overlay: rgba(17, 20, 24, 0.55);
+
+  --font-display:
+    "Plus Jakarta Sans Variable", "PingFang TC", "Noto Sans TC",
+    "Microsoft JhengHei", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body:
+    "Plus Jakarta Sans Variable", "PingFang TC", "Noto Sans TC",
+    "Microsoft JhengHei", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono:
+    "Fira Code Variable", ui-monospace, "SFMono-Regular", Menlo, Monaco,
+    Consolas, monospace;
+
+  --space-3xs: 0.125rem;
+  --space-2xs: 0.25rem;
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2.25rem;
+  --space-2xl: 3.5rem;
+  --space-3xl: 5rem;
+  --space-4xl: 7.5rem;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-md: 1.125rem;
+  --text-lg: 1.35rem;
+  --text-xl: 1.75rem;
+  --text-2xl: 2.25rem;
+  --text-3xl: 2.85rem;
+  --text-display: clamp(2.25rem, 5vw, 3.75rem);
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-micro: 140ms;
+  --dur-short: 240ms;
+  --dur-long: 400ms;
+
+  --rule-hair: 1px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-pill: 9999px;
+
+  --shadow-sm: 0 1px 3px rgba(17, 20, 24, 0.06);
+  --shadow-md: 0 8px 20px -4px rgba(17, 20, 24, 0.08);
+  --shadow-lg: 0 18px 36px -8px rgba(17, 20, 24, 0.12);
+
+  --page-gutter: clamp(1.25rem, 4.5vw, 3.5rem);
+  --page-width: 74rem;
+  --prose-width: 46rem;
+
+  --z-base: 1;
+  --z-raised: 10;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-modal: 400;
+  --z-toast: 500;
+  --z-tooltip: 600;
+}
+
+:root[data-theme="dark"] {
+  --color-paper: #111317;
+  --color-paper-2: #181b21;
+  --color-paper-3: #20242c;
+  --color-card: #1b1e24;
+  --color-card-hover: #22262e;
+
+  --color-ink: #f3f4f6;
+  --color-ink-2: #d4d8e0;
+  --color-muted: #9aa2b0;
+  --color-faint: #6b7280;
+
+  --color-rule: rgba(255, 255, 255, 0.09);
+  --color-rule-2: rgba(255, 255, 255, 0.16);
+
+  --color-accent: #60a5fa;
+  --color-accent-soft: rgba(96, 165, 250, 0.14);
+  --color-accent-ink: #0d1117;
+  --color-accent-hover: #93c5fd;
+
+  --color-secondary: #4ade80;
+  --color-secondary-soft: rgba(74, 222, 128, 0.14);
+
+  --color-tag-bg: #232730;
+  --color-tag-text: #d4d8e0;
+
+  --color-focus: #60a5fa;
+  --color-error: #f87171;
+  --color-success: #4ade80;
+
+  --color-code: #0b0d11;
+  --color-code-ink: #f1f3f5;
+  --color-code-inline-bg: #232730;
+  --color-overlay: rgba(8, 10, 12, 0.75);
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 12px 28px -4px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 24px 48px -8px rgba(0, 0, 0, 0.6);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --color-paper: #111317;
+    --color-paper-2: #181b21;
+    --color-paper-3: #20242c;
+    --color-card: #1b1e24;
+    --color-card-hover: #22262e;
+
+    --color-ink: #f3f4f6;
+    --color-ink-2: #d4d8e0;
+    --color-muted: #9aa2b0;
+    --color-faint: #6b7280;
+
+    --color-rule: rgba(255, 255, 255, 0.09);
+    --color-rule-2: rgba(255, 255, 255, 0.16);
+
+    --color-accent: #60a5fa;
+    --color-accent-soft: rgba(96, 165, 250, 0.14);
+    --color-accent-ink: #0d1117;
+    --color-accent-hover: #93c5fd;
+
+    --color-secondary: #4ade80;
+    --color-secondary-soft: rgba(74, 222, 128, 0.14);
+
+    --color-tag-bg: #232730;
+    --color-tag-text: #d4d8e0;
+
+    --color-focus: #60a5fa;
+    --color-error: #f87171;
+    --color-success: #4ade80;
+
+    --color-code: #0b0d11;
+    --color-code-ink: #f1f3f5;
+    --color-code-inline-bg: #232730;
+    --color-overlay: rgba(8, 10, 12, 0.75);
+
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.35);
+    --shadow-md: 0 12px 28px -4px rgba(0, 0, 0, 0.45);
+    --shadow-lg: 0 24px 48px -8px rgba(0, 0, 0, 0.6);
+  }
+}
+
+/* Reader Font Size Scale System */
+:root {
+  --font-scale: 1;
+}
+
+:root[data-font-scale="sm"] {
+  --font-scale: 0.9;
+}
+
+:root[data-font-scale="md"] {
+  --font-scale: 1;
+}
+
+:root[data-font-scale="lg"] {
+  --font-scale: 1.15;
+}
+
+:root[data-font-scale="xl"] {
+  --font-scale: 1.3;
+}

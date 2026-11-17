@@ -1,0 +1,168 @@
+---
+import { NEWS_CATEGORIES, siteConfig } from "../../config/site";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const profileJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  mainEntity: { "@id": new URL("/about/#person", Astro.site).href },
+};
+---
+
+<BaseLayout
+  title="關於 CarlNews"
+  description="CarlNews 的選題標準、三問判讀方法論與七大固定版面。"
+  jsonLd={profileJsonLd}
+>
+  <div class="page shell about-page">
+    <header class="page-header">
+      <div class="eyebrow">
+        <span class="eyebrow-dot" aria-hidden="true"></span>
+        <span>ABOUT & METHODOLOGY</span>
+      </div>
+      <h1>{siteConfig.name}：{siteConfig.subtitle}</h1>
+      <p>{siteConfig.description}</p>
+    </header>
+
+    <div class="about-grid">
+      <article class="prose">
+        <h2>判讀方法論：三問結構</h2>
+        <p>
+          資訊過載時代不缺即時快訊，缺的是把事件放回產業與制度脈絡裡的判斷框架。CarlNews
+          的每一篇時事評論都固定以三個核心問題切入：
+        </p>
+        <ul>
+          <li>
+            <strong>發生什麼事</strong
+            >：回歸財報、法規原文、產品公告與可交叉驗證的一手來源，釐清具體數字與時間點。
+          </li>
+          <li>
+            <strong>為什麼重要</strong
+            >：拆解這件事對商業模式、供應鏈競爭、監管邊界或日常生活的實質影響。
+          </li>
+          <li>
+            <strong>後續怎麼看</strong>：指出接下來 1 到 4
+            季真正值得追蹤的指標、關鍵時間窗口與潛在反轉風險。
+          </li>
+        </ul>
+
+        <h2>收錄範圍與七大版面</h2>
+        <p>
+          本站聚焦以下七個領域，所有時事評論皆歸入其中一個主版面，並輔以實體標籤與跨階段事件脈絡：
+        </p>
+        <ul>
+          {NEWS_CATEGORIES.map((category) => <li>{category}</li>)}
+        </ul>
+
+        <h2>更新與勘誤紀律</h2>
+        <p>
+          重大事件很少在單日定局。當既有議題有實質數據補充或澄清時，會於原篇更新
+          <code>updatedDate</code> 與 <code>updateNote</code
+          >；當事件出現結構性轉折，則開立新篇並以
+          <code>series</code> 串聯完整脈絡。
+        </p>
+      </article>
+
+      <aside class="site-spec-card" aria-label="網站規格">
+        <h3>網站規格</h3>
+        <dl>
+          <div>
+            <dt>主筆</dt>
+            <dd>{siteConfig.author}</dd>
+          </div>
+          <div>
+            <dt>語系</dt>
+            <dd>繁體中文 (zh-TW)</dd>
+          </div>
+          <div>
+            <dt>內容契約</dt>
+            <dd>三問速覽 + 一手來源</dd>
+          </div>
+          <div>
+            <dt>原始格式</dt>
+            <dd>Markdown / MDX (Git)</dd>
+          </div>
+          <div>
+            <dt>靜態引擎</dt>
+            <dd>Astro + TypeScript</dd>
+          </div>
+          <div>
+            <dt>部署架構</dt>
+            <dd>Cloudflare Workers</dd>
+          </div>
+          <div>
+            <dt>全文搜尋</dt>
+            <dd>Pagefind</dd>
+          </div>
+        </dl>
+      </aside>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .about-page {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(17rem, 0.42fr);
+    gap: var(--space-2xl);
+    align-items: start;
+  }
+
+  .about-grid .prose {
+    margin: 0;
+  }
+
+  .site-spec-card {
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+    border: var(--rule-hair) solid var(--color-rule);
+    background: var(--color-card);
+    box-shadow: var(--shadow-sm);
+    display: grid;
+    gap: var(--space-md);
+  }
+
+  .site-spec-card h3 {
+    font-size: var(--text-md);
+    font-weight: 700;
+    padding-bottom: var(--space-xs);
+    border-bottom: var(--rule-hair) solid var(--color-rule);
+  }
+
+  dl {
+    display: grid;
+    gap: var(--space-sm);
+    margin: 0;
+  }
+
+  dl div {
+    display: grid;
+    grid-template-columns: 6rem minmax(0, 1fr);
+    gap: var(--space-xs);
+    align-items: baseline;
+  }
+
+  dt {
+    color: var(--color-muted);
+    font-size: var(--text-xs);
+    font-weight: 500;
+  }
+
+  dd {
+    margin: 0;
+    color: var(--color-ink);
+    font-size: var(--text-xs);
+    font-weight: 600;
+  }
+
+  @media (max-width: 48rem) {
+    .about-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>
