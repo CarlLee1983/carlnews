@@ -29,9 +29,10 @@ CarlNews 全站採用**金字塔原理（Minto Pyramid Principle）**組織論�
 3. **中段講機制（Why）**：接續 2–3 句說明背後運作機制、雙方誘因或限制條件。
 4. **末段擺證據（Evidence）**：以具體數據、官方文件、時間點或粗體鍵值清單（`- **證據／指標**：...`）作為收束。
 
-## 寫作佇列與檔案 URL
+## 寫作佇列與每日自動化台帳
 
 - 尚未動筆的候選題目先記錄於 [`docs/news-queue.md`](news-queue.md)，依優先順序由上往下排列；正式成文時建立檔案並於同一次變更移除對應佇列項目。
+- 寫作或 Bot 自動化巡檢前，先執行 `pnpm news:ledger`（或 `--json`）查看 7 大版面分佈、既有 `series` 與下一個 `seriesOrder`、常用 `tags`，再以 `pnpm news:ledger --check-url "<url>"` 查驗來源 URL 是否重複。
 - 時事評論放在 `src/content/news`，使用小寫 ASCII 檔名與連字號，例如 `ai-inference-compute-shift-2026.md`。
 - 檔名會成為 `/news/<slug>/`；發布後不要任意更名。
 
@@ -70,6 +71,7 @@ CarlNews 全站採用**金字塔原理（Minto Pyramid Principle）**組織論�
 ## Markdown 與 MDX
 
 - 一篇時事評論只使用一個 h1；frontmatter `title` 會輸出 h1，正文從 `##` 開始。
-- 禁止使用 Mermaid fence 與 LaTeX `$...$` 語法；數學式改用行內程式碼或 Unicode（如 `≥`、`×`）。
+- 禁止使用 Emoji、Mermaid fence 與 LaTeX `$...$` 語法；數學式改用行內程式碼或 Unicode（如 `≥`、`×`）。
+- 新增或修改時事評論會由 `pnpm content:policy -- HEAD` 自動檢查 BLUF 首段結論、結論句 `##` 副標（至少 2 節）、含時區 ISO 8601 時間戳、`sources` 乾淨 URL 與禁用 Emoji／Mermaid／LaTeX。
 - 提示區塊使用 GitHub alert 語法（`> [!NOTE]`、`> [!TIP]`、`> [!IMPORTANT]`、`> [!WARNING]`、`> [!CAUTION]`）。
 - 原則上避免使用寬版 Markdown 表格；必要時僅用於純數值對照。

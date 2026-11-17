@@ -18,6 +18,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check --cache --cache-strategy content .",
     "content:policy": "node scripts/validate-content-policy.mjs",
+    "news:ledger": "node scripts/news-ledger.mjs",
     "validate:site-url": "node scripts/validate-site-url.mjs"
   },
   "dependencies": {
