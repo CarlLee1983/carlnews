@@ -16,10 +16,6 @@ const profileJsonLd = {
 >
   <div class="page shell about-page">
     <header class="page-header">
-      <div class="eyebrow">
-        <span class="eyebrow-dot" aria-hidden="true"></span>
-        <span>ABOUT & METHODOLOGY</span>
-      </div>
       <h1>{siteConfig.name}：{siteConfig.subtitle}</h1>
       <p>{siteConfig.description}</p>
     </header>
@@ -120,11 +116,9 @@ const profileJsonLd = {
   }
 
   .site-spec-card {
-    padding: var(--space-xl);
-    border-radius: var(--radius-lg);
-    border: var(--rule-hair) solid var(--color-rule);
-    background: var(--color-card);
-    box-shadow: var(--shadow-sm);
+    padding: var(--space-lg);
+    border-block: var(--rule-hair) solid var(--color-rule-2);
+    background: var(--color-paper-2);
     display: grid;
     gap: var(--space-md);
   }

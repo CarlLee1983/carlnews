@@ -57,15 +57,14 @@ const shouldRender = entries.length >= minEntries;
 
 <style>
   .toc {
-    padding: var(--space-lg);
-    border: var(--rule-hair) solid var(--color-rule);
-    border-radius: var(--radius-lg);
-    background: var(--color-card);
+    padding: var(--space-md) var(--space-lg);
+    border-block: var(--rule-hair) solid var(--color-rule-2);
+    background: var(--color-paper-2);
   }
 
   .toc__summary {
     display: flex;
-    min-height: 2.75rem;
+    min-height: 2.5rem;
     align-items: center;
     gap: var(--space-xs);
     cursor: pointer;
@@ -96,16 +95,18 @@ const shouldRender = entries.length >= minEntries;
   }
 
   .toc__title {
-    color: var(--color-ink-2);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
     font-size: var(--text-xs);
     font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+    letter-spacing: 0.04em;
   }
 
   .toc__count {
     color: var(--color-muted);
+    font-family: var(--font-sans);
     font-size: var(--text-xs);
+    font-variant-numeric: tabular-nums;
   }
 
   .toc__list {
