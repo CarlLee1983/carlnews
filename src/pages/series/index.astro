@@ -13,10 +13,6 @@ const series = collectTaxonomy(await getVisiblePosts(), "series");
 >
   <div class="page shell">
     <header class="page-header">
-      <div class="eyebrow">
-        <span class="eyebrow-dot" aria-hidden="true"></span>
-        <span>TRACKED STORYLINES</span>
-      </div>
       <h1>事件脈絡</h1>
       <p>
         串聯跨日、跨階段演進的重大事件，從最初引爆點到後續轉折完整保留前後文。
@@ -25,13 +21,8 @@ const series = collectTaxonomy(await getVisiblePosts(), "series");
     {
       series.length > 0 ? (
         <div class="series-grid">
-          {series.map((item, index) => (
-            <SeriesCard
-              name={item.name}
-              slug={item.slug}
-              posts={item.posts}
-              index={index}
-            />
+          {series.map((item) => (
+            <SeriesCard name={item.name} slug={item.slug} posts={item.posts} />
           ))}
         </div>
       ) : (

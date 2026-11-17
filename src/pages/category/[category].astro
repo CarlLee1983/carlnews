@@ -26,9 +26,8 @@ const { category } = Astro.props;
     </div>
 
     <header class="page-header">
-      <div class="eyebrow">
-        <span class="eyebrow-dot" aria-hidden="true"></span>
-        <span>Desk · {category.posts.length} 篇</span>
+      <div class="eyebrow desk-eyebrow" data-desk={category.name}>
+        <span>版面 · {category.posts.length} 篇</span>
       </div>
       <h1>{category.name}</h1>
       <p>收錄歸類於「{category.name}」版面的時事判讀與追蹤。</p>
@@ -56,5 +55,12 @@ const { category } = Astro.props;
 <style>
   .category-nav {
     margin-block-end: var(--space-md);
+  }
+
+  .desk-eyebrow {
+    padding: 0.18rem 0.6rem;
+    border-radius: var(--radius-sm);
+    background: var(--desk-soft);
+    color: var(--desk-color);
   }
 </style>

@@ -1,46 +1,67 @@
 :root {
-  /* Light Mode — Modern Financial Dispatch (Cold Newsprint) */
-  --color-paper: #f7f8fa;
-  --color-paper-2: #eef1f5;
-  --color-paper-3: #e3e7ee;
+  /* Light Mode — Modern Business Dispatch (Information-Driven Color System) */
+  --color-paper: #f3f4f6;
+  --color-paper-2: #e8ecf1;
+  --color-paper-3: #d8dfe8;
   --color-card: #ffffff;
-  --color-card-hover: #fcfcfd;
+  --color-card-hover: #fcfdff;
 
-  --color-ink: #0f1419;
-  --color-ink-2: #242b35;
-  --color-muted: #525b68;
-  --color-faint: #7d8694;
+  --color-ink: #0f172a;
+  --color-ink-2: #1e293b;
+  --color-muted: #475569;
+  --color-faint: #64748b;
 
-  --color-rule: rgba(15, 20, 25, 0.11);
-  --color-rule-2: rgba(15, 20, 25, 0.22);
+  --color-rule: rgba(15, 23, 42, 0.1);
+  --color-rule-2: rgba(15, 23, 42, 0.18);
 
-  --color-accent: #b4232a;
-  --color-accent-soft: #fdf2f2;
+  --color-accent: #be123c;
+  --color-accent-soft: #ffe4e6;
   --color-accent-ink: #ffffff;
-  --color-accent-hover: #961c22;
+  --color-accent-hover: #9f1239;
 
-  --color-secondary: #1e40af;
-  --color-secondary-soft: #eff4ff;
+  --color-secondary: #1d4ed8;
+  --color-secondary-soft: #dbeafe;
 
-  --color-tag-bg: #eef1f5;
-  --color-tag-text: #242b35;
+  --color-q1: #1d4ed8;
+  --color-q1-soft: #dbeafe;
+  --color-q2: #be123c;
+  --color-q2-soft: #ffe4e6;
+  --color-q3: #0f766e;
+  --color-q3-soft: #ccfbf1;
 
-  --color-focus: #b4232a;
-  --color-error: #b4232a;
-  --color-success: #156f54;
+  --desk-biz: #1d4ed8;
+  --desk-biz-soft: #dbeafe;
+  --desk-ai: #6d28d9;
+  --desk-ai-soft: #ede9fe;
+  --desk-semi: #b45309;
+  --desk-semi-soft: #fef3c7;
+  --desk-prod: #0f766e;
+  --desk-prod-soft: #ccfbf1;
+  --desk-policy: #be123c;
+  --desk-policy-soft: #ffe4e6;
+  --desk-world: #0369a1;
+  --desk-world-soft: #e0f2fe;
+  --desk-life: #c2410c;
+  --desk-life-soft: #ffedd5;
 
-  --color-code: #11161d;
-  --color-code-ink: #f3f5f8;
-  --color-code-inline-bg: #eef1f5;
-  --color-overlay: rgba(15, 20, 25, 0.62);
+  --color-tag-bg: #e8ecf1;
+  --color-tag-text: #1e293b;
 
-  /* 拉丁字自架（BaseLayout 引入 @fontsource-variable），中文交給系統字型。 */
-  --font-display:
-    "Plus Jakarta Sans Variable", "PingFang TC", "Noto Sans TC",
+  --color-focus: #be123c;
+  --color-error: #be123c;
+  --color-success: #0f766e;
+
+  --color-code: #0f172a;
+  --color-code-ink: #f8fafc;
+  --color-code-inline-bg: #e2e8f0;
+  --color-overlay: rgba(15, 23, 42, 0.58);
+
+  /* 拉丁字自架於 BaseLayout，中文交給系統黑體以維持科技社論的一貫性。 */
+  --font-sans:
+    "Plus Jakarta Sans Variable", "PingFang TC", "Noto Sans TC", "Heiti TC",
     "Microsoft JhengHei", -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-body:
-    "Plus Jakarta Sans Variable", "PingFang TC", "Noto Sans TC",
-    "Microsoft JhengHei", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: var(--font-sans);
+  --font-body: var(--font-sans);
   --font-mono:
     "Fira Code Variable", ui-monospace, "SFMono-Regular", Menlo, Monaco,
     Consolas, monospace;
@@ -86,8 +107,8 @@
   --shadow-lg: 0 16px 32px -8px rgba(15, 20, 25, 0.14);
 
   --page-gutter: clamp(1.25rem, 4.5vw, 3.5rem);
-  --page-width: 76rem;
-  --prose-width: 46rem;
+  --page-width: 74rem;
+  --prose-width: 44rem;
 
   --z-base: 1;
   --z-raised: 10;
@@ -99,40 +120,62 @@
 }
 
 :root[data-theme="dark"] {
-  /* Dark Mode — Midnight Terminal Slate */
-  --color-paper: #0d1015;
-  --color-paper-2: #12161d;
-  --color-paper-3: #1b212b;
-  --color-card: #151921;
-  --color-card-hover: #1c212b;
+  /* Dark Mode — Deep Midnight Navy Slate */
+  --color-paper: #0b0f17;
+  --color-paper-2: #111827;
+  --color-paper-3: #1e293b;
+  --color-card: #131b2e;
+  --color-card-hover: #19233c;
 
-  --color-ink: #f3f5f8;
-  --color-ink-2: #d5dbe3;
-  --color-muted: #9aa4b2;
-  --color-faint: #677282;
+  --color-ink: #f8fafc;
+  --color-ink-2: #e2e8f0;
+  --color-muted: #94a3b8;
+  --color-faint: #64748b;
 
-  --color-rule: rgba(255, 255, 255, 0.1);
-  --color-rule-2: rgba(255, 255, 255, 0.2);
+  --color-rule: rgba(248, 250, 252, 0.09);
+  --color-rule-2: rgba(248, 250, 252, 0.17);
 
-  --color-accent: #f87171;
-  --color-accent-soft: rgba(248, 113, 113, 0.14);
-  --color-accent-ink: #0d1015;
-  --color-accent-hover: #fca5a5;
+  --color-accent: #fb7185;
+  --color-accent-soft: rgba(251, 113, 133, 0.15);
+  --color-accent-ink: #0b0f17;
+  --color-accent-hover: #fda4af;
 
   --color-secondary: #60a5fa;
-  --color-secondary-soft: rgba(96, 165, 250, 0.14);
+  --color-secondary-soft: rgba(96, 165, 250, 0.15);
 
-  --color-tag-bg: #1c222d;
-  --color-tag-text: #d5dbe3;
+  --color-q1: #60a5fa;
+  --color-q1-soft: rgba(96, 165, 250, 0.16);
+  --color-q2: #fb7185;
+  --color-q2-soft: rgba(251, 113, 133, 0.16);
+  --color-q3: #2dd4bf;
+  --color-q3-soft: rgba(45, 212, 191, 0.16);
 
-  --color-focus: #f87171;
-  --color-error: #f87171;
-  --color-success: #4ade80;
+  --desk-biz: #60a5fa;
+  --desk-biz-soft: rgba(96, 165, 250, 0.16);
+  --desk-ai: #a78bfa;
+  --desk-ai-soft: rgba(167, 139, 250, 0.16);
+  --desk-semi: #fbbf24;
+  --desk-semi-soft: rgba(251, 191, 36, 0.16);
+  --desk-prod: #2dd4bf;
+  --desk-prod-soft: rgba(45, 212, 191, 0.16);
+  --desk-policy: #fb7185;
+  --desk-policy-soft: rgba(251, 113, 133, 0.16);
+  --desk-world: #38bdf8;
+  --desk-world-soft: rgba(56, 189, 248, 0.16);
+  --desk-life: #fb923c;
+  --desk-life-soft: rgba(251, 146, 60, 0.16);
 
-  --color-code: #080a0e;
-  --color-code-ink: #f3f5f8;
-  --color-code-inline-bg: #1c222d;
-  --color-overlay: rgba(6, 8, 11, 0.8);
+  --color-tag-bg: #1e293b;
+  --color-tag-text: #e2e8f0;
+
+  --color-focus: #fb7185;
+  --color-error: #fb7185;
+  --color-success: #2dd4bf;
+
+  --color-code: #070a10;
+  --color-code-ink: #f8fafc;
+  --color-code-inline-bg: #1e293b;
+  --color-overlay: rgba(7, 10, 16, 0.8);
 
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.35);
   --shadow-md: 0 8px 20px -4px rgba(0, 0, 0, 0.45);
@@ -141,39 +184,61 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) {
-    --color-paper: #0d1015;
-    --color-paper-2: #12161d;
-    --color-paper-3: #1b212b;
-    --color-card: #151921;
-    --color-card-hover: #1c212b;
+    --color-paper: #0b0f17;
+    --color-paper-2: #111827;
+    --color-paper-3: #1e293b;
+    --color-card: #131b2e;
+    --color-card-hover: #19233c;
 
-    --color-ink: #f3f5f8;
-    --color-ink-2: #d5dbe3;
-    --color-muted: #9aa4b2;
-    --color-faint: #677282;
+    --color-ink: #f8fafc;
+    --color-ink-2: #e2e8f0;
+    --color-muted: #94a3b8;
+    --color-faint: #64748b;
 
-    --color-rule: rgba(255, 255, 255, 0.1);
-    --color-rule-2: rgba(255, 255, 255, 0.2);
+    --color-rule: rgba(248, 250, 252, 0.09);
+    --color-rule-2: rgba(248, 250, 252, 0.17);
 
-    --color-accent: #f87171;
-    --color-accent-soft: rgba(248, 113, 113, 0.14);
-    --color-accent-ink: #0d1015;
-    --color-accent-hover: #fca5a5;
+    --color-accent: #fb7185;
+    --color-accent-soft: rgba(251, 113, 133, 0.15);
+    --color-accent-ink: #0b0f17;
+    --color-accent-hover: #fda4af;
 
     --color-secondary: #60a5fa;
-    --color-secondary-soft: rgba(96, 165, 250, 0.14);
+    --color-secondary-soft: rgba(96, 165, 250, 0.15);
 
-    --color-tag-bg: #1c222d;
-    --color-tag-text: #d5dbe3;
+    --color-q1: #60a5fa;
+    --color-q1-soft: rgba(96, 165, 250, 0.16);
+    --color-q2: #fb7185;
+    --color-q2-soft: rgba(251, 113, 133, 0.16);
+    --color-q3: #2dd4bf;
+    --color-q3-soft: rgba(45, 212, 191, 0.16);
 
-    --color-focus: #f87171;
-    --color-error: #f87171;
-    --color-success: #4ade80;
+    --desk-biz: #60a5fa;
+    --desk-biz-soft: rgba(96, 165, 250, 0.16);
+    --desk-ai: #a78bfa;
+    --desk-ai-soft: rgba(167, 139, 250, 0.16);
+    --desk-semi: #fbbf24;
+    --desk-semi-soft: rgba(251, 191, 36, 0.16);
+    --desk-prod: #2dd4bf;
+    --desk-prod-soft: rgba(45, 212, 191, 0.16);
+    --desk-policy: #fb7185;
+    --desk-policy-soft: rgba(251, 113, 133, 0.16);
+    --desk-world: #38bdf8;
+    --desk-world-soft: rgba(56, 189, 248, 0.16);
+    --desk-life: #fb923c;
+    --desk-life-soft: rgba(251, 146, 60, 0.16);
 
-    --color-code: #080a0e;
-    --color-code-ink: #f3f5f8;
-    --color-code-inline-bg: #1c222d;
-    --color-overlay: rgba(6, 8, 11, 0.8);
+    --color-tag-bg: #1e293b;
+    --color-tag-text: #e2e8f0;
+
+    --color-focus: #fb7185;
+    --color-error: #fb7185;
+    --color-success: #2dd4bf;
+
+    --color-code: #070a10;
+    --color-code-ink: #f8fafc;
+    --color-code-inline-bg: #1e293b;
+    --color-overlay: rgba(7, 10, 16, 0.8);
 
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.35);
     --shadow-md: 0 8px 20px -4px rgba(0, 0, 0, 0.45);

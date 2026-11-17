@@ -7,10 +7,9 @@ interface Props {
   name: string;
   slug: string;
   posts: CollectionEntry<"news">[];
-  index?: number;
 }
 
-const { name, slug, posts, index } = Astro.props;
+const { name, slug, posts } = Astro.props;
 
 const postWithCover = posts.find((p) => p.data.cover) ?? posts[0];
 const cover = postWithCover?.data.cover;
@@ -21,17 +20,13 @@ const totalReadingMinutes = posts.reduce((acc, p) => {
 }, 0);
 
 const latestPost = posts[posts.length - 1];
-const seriesOrderLabel =
-  typeof index === "number"
-    ? `STORYLINE · ${String(index + 1).padStart(2, "0")}`
-    : "STORYLINE";
 ---
 
 <a class="series-card" href={`/series/${slug}/`}>
   <div class="series-card__head">
-    <span class="series-card__badge">{seriesOrderLabel}</span>
+    <span class="series-card__badge">事件脈絡</span>
     <span class="series-card__counts">
-      {posts.length} 篇 · 約 {totalReadingMinutes} 分鐘
+      共 {posts.length} 篇 · 約 {totalReadingMinutes} 分鐘
     </span>
   </div>
 
@@ -58,7 +53,7 @@ const seriesOrderLabel =
         <div class="series-card__latest">
           <div class="latest-label">
             <span>最新進度</span>
-            <span>Vol. {String(posts.length).padStart(2, "0")}</span>
+            <span>第 {posts.length} 篇</span>
           </div>
           <p class="latest-title">{latestPost.data.title}</p>
         </div>
@@ -66,22 +61,7 @@ const seriesOrderLabel =
     }
 
     <div class="series-card__action">
-      <span>查看事件脈絡</span>
-      <svg
-        class="action-arrow"
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        aria-hidden="true"
-      >
-        <line x1="5" y1="12" x2="19" y2="12"></line>
-        <polyline points="12 5 19 12 12 19"></polyline>
-      </svg>
+      <span>查看事件脈絡 →</span>
     </div>
   </div>
 </a>
@@ -90,13 +70,12 @@ const seriesOrderLabel =
   .series-card {
     display: flex;
     flex-direction: column;
-    border: var(--rule-hair) solid var(--color-rule-2);
-    border-block-start: var(--rule-masthead) solid var(--color-ink);
-    border-radius: var(--radius-md);
-    background: var(--color-card);
+    gap: var(--space-md);
+    min-width: 0;
+    padding-block: var(--space-lg);
+    border-block-start: var(--rule-hair) solid var(--color-rule-2);
     text-decoration: none;
     color: inherit;
-    overflow: hidden;
     transition: border-color var(--dur-short) var(--ease-out);
   }
 
@@ -106,21 +85,18 @@ const seriesOrderLabel =
 
   .series-card__head {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
     gap: var(--space-sm);
-    padding: var(--space-sm) var(--space-lg);
-    border-block-end: var(--rule-hair) solid var(--color-rule);
-    background: var(--color-paper-2);
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
     font-size: var(--text-xs);
     font-variant-numeric: tabular-nums;
   }
 
   .series-card__badge {
     font-weight: 700;
-    color: var(--color-accent);
-    letter-spacing: 0.04em;
+    color: var(--color-muted);
   }
 
   .series-card__counts {
@@ -129,6 +105,7 @@ const seriesOrderLabel =
 
   .series-card__visual {
     height: 9rem;
+    border-radius: var(--radius-sm);
     background: var(--color-paper-2);
     overflow: hidden;
   }
@@ -143,14 +120,14 @@ const seriesOrderLabel =
     display: flex;
     flex-direction: column;
     flex: 1;
-    padding: var(--space-lg);
     gap: var(--space-md);
   }
 
   .series-card__title {
+    font-family: var(--font-display);
     font-size: var(--text-xl);
     font-weight: 700;
-    line-height: 1.32;
+    line-height: 1.35;
     color: var(--color-ink);
   }
 
@@ -160,42 +137,35 @@ const seriesOrderLabel =
 
   .series-card__latest {
     margin-top: auto;
-    padding: var(--space-sm) var(--space-md);
-    background: var(--color-paper-2);
-    border-inline-start: 2px solid var(--color-secondary);
-    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding-block-start: var(--space-sm);
+    border-block-start: var(--rule-hair) solid var(--color-rule);
     display: grid;
     gap: 0.2rem;
   }
 
   .latest-label {
     display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
     align-items: center;
     justify-content: space-between;
-    font-size: 0.7rem;
-    font-family: var(--font-mono);
-    font-weight: 700;
-    color: var(--color-secondary);
+    font-size: 0.72rem;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    color: var(--color-muted);
     font-variant-numeric: tabular-nums;
   }
 
   .latest-title {
     font-size: var(--text-sm);
     color: var(--color-ink-2);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    line-height: 1.65;
   }
 
   .series-card__action {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-top: var(--space-xs);
-    border-block-start: var(--rule-hair) solid var(--color-rule);
-    font-size: var(--text-sm);
-    font-family: var(--font-display);
-    font-weight: 700;
+    font-size: var(--text-xs);
+    font-family: var(--font-sans);
+    font-weight: 600;
     color: var(--color-accent);
   }
 </style>
