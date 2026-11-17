@@ -17,7 +17,7 @@ src/content/news/*.{md,mdx}
   → wrangler deploy                Workers Static Assets
 ```
 
-`SITE_URL` 在 `astro.config.mjs` 讀入，決定 canonical、RSS、Sitemap、Open Graph 與 robots.txt。未設定時退回保留字 `https://carlnews.example`，讓本地與 CI 在沒有網域時仍能 build；`scripts/validate-site-url.mjs` 在 `pnpm deploy` 阻擋這個 placeholder 進入正式部署。
+`SITE_URL` 在 `astro.config.mjs` 讀入，決定 canonical、RSS、Sitemap、Open Graph 與 robots.txt。未設定時退回保留字 `https://carlnews.example`，讓本地與 CI 在沒有網域時仍能 build；`scripts/validate-site-url.mjs` 在 `pnpm run deploy` 阻擋這個 placeholder 進入正式部署。
 
 ## 邊界清單
 

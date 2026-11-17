@@ -35,6 +35,7 @@
 | `pnpm test`           | 執行資料模型、排序、taxonomy、台帳去重與外掛測試                   |
 | `pnpm news:ledger`    | 輸出時事台帳摘要（7 大版面分佈、series 進度）與 `--check-url` 去重 |
 | `pnpm content:policy` | 驗證新增／修改時事的金字塔結論結構與 Anti-Slop 品質閘門            |
+| `pnpm run deploy`     | 驗證正式 `SITE_URL`、建置並透過 Wrangler 部署至 Cloudflare Workers |
 | `pnpm format`         | 套用 Prettier                                                      |
 
 ## 本地啟動

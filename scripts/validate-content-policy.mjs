@@ -25,9 +25,13 @@ function listNewsFiles(dir) {
 /** @param {string} ref */
 function hasGitRef(ref) {
   try {
-    execFileSync("git", ["rev-parse", "--verify", "--quiet", ref], {
-      stdio: "ignore",
-    });
+    execFileSync(
+      "git",
+      ["rev-parse", "--verify", "--quiet", `${ref}^{commit}`],
+      {
+        stdio: "ignore",
+      },
+    );
     return true;
   } catch {
     return false;
